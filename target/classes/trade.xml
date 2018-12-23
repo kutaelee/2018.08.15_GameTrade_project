@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tradens">
+	<!-- Use type aliases to avoid typing the full classname every time. -->
+	<resultMap id="tradeResult" type="trade">
+		<result property="no" column="no" />
+		<result property="id" column="id"/>
+		<result property="writer" column="writer" />
+		<result property="pw" column="pw" />
+		<result property="reg_date" column="reg_date" />
+		<result property="item" column="item" />
+		<result property="price" column="price" />
+		<result property="soldout" column="soldout" />
+		<result property="tag" column="tag" />
+		<result property="del" column="del" />
+		<result property="discount" column="discount" />
+		
+		
+	</resultMap>
+
+	<!-- <select id="tradelist" parameterType="string" resultType="trade">select	* from trade where tag=#{tag} order by no desc</select> -->
+	<insert id="tradeinsert" parameterType="trade">insert into trade values(t_seq.nextval,#{id},#{writer},'pw',sysdate,#{item},#{price},'N',#{tag},'N',#{discount})</insert>
+	
+	<select id="tradelist" parameterType="trade" resultMap="tradeResult">
+		select * from (select rowNum rn, a.* from (
+			select * from trade 
+	<where>
+	tag=#{tag} and del='N'
+		<if test="keyword!=null and keyword!=''">
+				and ${search} like '%'||#{keyword}||'%'
+				
+		</if>
+	</where>		
+			order by reg_date desc) a)
+				where rn between #{startRow} and #{endRow} 
+	</select>
+	<select id="getTotal" parameterType="trade" resultType="int">
+		select count(*) from trade
+		<where>
+		tag=#{tag} and del='N'
+			<if test="keyword!=null and keyword!=''">
+					and ${search} like '%'||#{keyword}||'%'
+				</if>
+			
+		</where>	
+	</select>
+	<select id="mytradelist" parameterType="trade" resultMap="tradeResult">
+			select * from (select rowNum rn, a.* from (
+			select * from trade <where>(id=#{id} and tag=#{tag})and del='N'</where> 
+			order by reg_date desc) a)
+				where rn between #{startRow} and #{endRow} 
+	</select>
+	
+	<select id="mygettotal" parameterType="trade" resultType="int">
+		select count(*) from trade
+		<where>
+		tag=#{tag} and (id=#{id} and del='N')
+			
+		</where>	
+	</select>
+	<update id="mylistdel" parameterType="trade">
+		update trade set del='Y' where no=${no}
+	</update>
+</mapper>
+

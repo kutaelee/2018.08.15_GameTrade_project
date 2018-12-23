@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardns">
+	<!-- Use type aliases to avoid typing the full classname every time. -->
+	<resultMap id="boardResult" type="board">
+		<result property="no" column="no" />
+		<result property="writer" column="writer" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="hits" column="hits" />
+		<result property="pw" column="pw" />
+		<result property="reg_date" column="reg_date" />
+		<result property="del" column="del" />
+		<result property="tag" column="tag" />
+
+	</resultMap>
+<insert id="boardinsert" parameterType="board">insert into board values(t_seq.nextval,#{writer},#{title},#{content},0,#{pw},sysdate,'N',#{tag})</insert>
+	<select id="list" parameterType="board" resultType="board">select * from
+		board where tag=#{tag} </select>
+	<select id="view" parameterType="int" resultType="board">select * from
+		board where no=#{no}</select>
+	<select id="boardlist" parameterType="board" resultMap="boardResult">
+		select * from (select rowNum rn, a.* from (
+		select * from board
+		<where>
+			tag=#{tag} and del='N'
+			<if test="keyword!=null and keyword!=''">
+				<if test="search=='subcon'">
+					and (title like '%'||#{keyword}||'%' or
+					content like '%'||#{keyword}||'%')
+
+				</if>
+				<if test="search!='subcon'">
+				and	${search} like '%'||#{keyword}||'%'
+				</if>
+			</if>
+		</where>
+		order by reg_date desc) a)
+		where rn between #{startRow} and #{endRow}
+	</select>
+	<select id="getTotal" parameterType="board" resultType="int">
+		select count(*) from board
+		<where>
+			tag=#{tag}
+			<if test="keyword!=null and keyword!=''">
+				<if test="search=='subcon'">
+					and title like '%'||#{keyword}||'%' or
+					content like '%'||#{keyword}||'%'
+				</if>
+				<if test="search!='subcon'">
+				 and ${search} like '%'||#{keyword}||'%'
+				</if>
+			</if>
+		</where>
+	</select>
+	<update id="boardupdate" parameterType="board" >
+	update board set title=#{title},content=#{content} where no=${no}
+	</update>
+	
+	<update id="boarddelete" parameterType="board">
+	update board set del='Y' where no=${no}
+	</update>
+</mapper>

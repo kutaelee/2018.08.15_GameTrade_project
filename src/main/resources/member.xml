@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberns">
+	<!-- Use type aliases to avoid typing the full classname every time. -->
+	<resultMap id="memberResult" type="member">
+		<result property="no" column="no" />
+		<result property="id" column="id" />
+		<result property="pw" column="pw" />
+		<result property="email" column="email" />
+		<result property="del" column="del" />
+		<result property="grade" column="grade"/>
+
+
+	</resultMap>
+	<insert id="meminsert" parameterType="member">insert into member values(m_seq.nextval,#{id},#{pw},#{email},'N',0)</insert>
+	<select id="loginselect" parameterType="member" resultType="member">select * from member
+	where id=#{id} and pw=#{pw} </select>
+	<select id="idChk" parameterType="member" resultType="member">select * from member where id=#{id}</select>
+	<select id="findid" parameterType="member" resultType="member">select * from member where email=#{email}</select>
+	<select id="findpw" parameterType="member" resultType="member">select * from member where email=#{email} and id=#{id}</select>
+	<update id="modifyinfo" parameterType="member">update member set pw=#{imsi},email=#{email} where id=#{id} and pw=#{pw}</update>
+</mapper>

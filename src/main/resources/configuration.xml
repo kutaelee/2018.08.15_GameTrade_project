@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="trade" type="kr.co.realstore.model.Trade"/>
+		<typeAlias alias="board" type="kr.co.realstore.model.Board" />
+		<typeAlias alias="member" type="kr.co.realstore.model.Member" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="trade.xml"/> 
+		<mapper resource="board.xml" />
+		<mapper resource="member.xml" />
+	</mappers>
+</configuration>
