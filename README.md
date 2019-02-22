@@ -1,1 +1,3 @@
-Spring JQuery Mysql Apache를 이용한 게임아이템 거래사이트 개인 프로젝트 입니다.
+# Spring JQuery Mysql Apache를 이용한 게임아이템 거래사이트 개인 프로젝트 입니다.
+* 기간 2018.08.15~2018.09.15
+* 첫 개인 웹프로젝트입니다.
